@@ -197,7 +197,7 @@ class Run(BaseModel):
     properties: Optional[Dict[str, Any]] = None
 
 
-class SarifLog(BaseModel):
+class Sarif(BaseModel):
     version: str = "2.1.0"
     schema_uri: Optional[str] = Field(None, alias="$schema")
     runs: List[Run]

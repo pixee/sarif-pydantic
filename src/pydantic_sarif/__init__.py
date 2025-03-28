@@ -15,7 +15,7 @@ from pydantic_sarif.sarif import (
     ReportingDescriptorReference,
     Result,
     Run,
-    SarifLog,
+    Sarif,
     Tool,
     ToolComponentReference,
     ToolDriver,
@@ -36,7 +36,7 @@ __all__ = [
     "ReportingDescriptorReference",
     "Result",
     "Run",
-    "SarifLog",
+    "Sarif",
     "Tool",
     "ToolComponentReference",
     "ToolDriver",
@@ -44,7 +44,7 @@ __all__ = [
 ]
 
 
-def load(path: Path | str) -> SarifLog:
+def load(path: Path | str) -> Sarif:
     """
     Load a SARIF log from a file.
 
@@ -52,6 +52,6 @@ def load(path: Path | str) -> SarifLog:
         path (Path): The path to the SARIF log file.
 
     Returns:
-        SarifLog: The loaded SARIF log.
+        Sarif: The loaded SARIF log.
     """
-    return SarifLog.model_validate_json(Path(path).read_text())
+    return Sarif.model_validate_json(Path(path).read_text())
