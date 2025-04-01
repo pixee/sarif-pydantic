@@ -76,18 +76,18 @@ def test_run_from_dict():
 
     assert run.tool.driver.name == "TestTool"
     assert run.invocations[0].execution_successful is True
-    assert run.conversion == {"tool": {"driver": {"name": "Converter"}}}
+    assert run.conversion.tool.driver.name == "Converter"
     assert run.language == "en-US"
     assert (
-        run.version_control_provenance[0]["repositoryUri"]
+        run.version_control_provenance[0].repository_uri
         == "https://github.com/example/repo"
     )
-    assert run.original_uri_base_ids["SRCROOT"]["uri"] == "file:///src/"
+    assert run.original_uri_base_ids["SRCROOT"].uri == "file:///src/"
     assert run.artifacts[0].location.uri == "file:///src/file.py"
     assert run.logical_locations[0].name == "function_name"
     assert run.graphs == []
     assert run.results[0].message.text == "Result message"
-    assert run.automation_details == {"id": "TEST-ID-123"}
+    assert run.automation_details.id == "TEST-ID-123"
     assert run.baseline_guid == UUID("12345678-1234-5678-1234-567812345678")
     assert run.redaction_tokens == ["SECRET"]
     assert run.default_encoding == "utf-8"

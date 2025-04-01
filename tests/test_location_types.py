@@ -71,14 +71,14 @@ def test_physical_location_from_dict():
             "endLine": 22,
             "endColumn": 1,
         },
-        "address": "0x12345678",
+        "address": {"absoluteAddress": 12345678},
     }
 
     physical_location = PhysicalLocation.model_validate(full_dict)
     assert physical_location.artifact_location.uri == "file:///src/file.py"
     assert physical_location.region.start_line == 10
     assert physical_location.context_region.start_line == 8
-    assert physical_location.address == "0x12345678"
+    assert physical_location.address.absolute_address == 12345678
 
 
 def test_logical_location_from_dict():

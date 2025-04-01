@@ -112,7 +112,8 @@ def test_result_from_dict():
     assert result.graph_traversals == []
     assert len(result.related_locations) == 1
     assert result.related_locations[0].id == 2
-    assert result.suppression == {"kind": "inSource", "status": "accepted"}
+    assert result.suppression.kind == "inSource"
+    assert result.suppression.status == "accepted"
     assert result.rank == 95.0
     assert result.attachments == []
     assert result.hosted_viewer_uri == "https://example.com/viewer"
