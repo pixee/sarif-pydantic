@@ -1,11 +1,12 @@
 import pytest
+
 from pydantic_sarif.sarif import (
-    Region,
-    PhysicalLocation,
-    LogicalLocation,
-    Location,
     ArtifactLocation,
+    Location,
+    LogicalLocation,
     Message,
+    PhysicalLocation,
+    Region,
 )
 
 
@@ -35,11 +36,9 @@ def test_region_from_dict():
         "byteOffset": 300,
         "byteLength": 400,
         "snippet": "code snippet",
-        "message": {
-            "text": "Region message"
-        }
+        "message": {"text": "Region message"},
     }
-    
+
     region = Region.model_validate(full_dict)
     assert region.start_line == 10
     assert region.start_column == 5
@@ -64,24 +63,17 @@ def test_physical_location_from_dict():
 
     # Test full creation
     full_dict = {
-        "artifactLocation": {
-            "uri": "file:///src/file.py"
-        },
-        "region": {
-            "startLine": 10,
-            "startColumn": 5,
-            "endLine": 20,
-            "endColumn": 15
-        },
+        "artifactLocation": {"uri": "file:///src/file.py"},
+        "region": {"startLine": 10, "startColumn": 5, "endLine": 20, "endColumn": 15},
         "contextRegion": {
             "startLine": 8,
             "startColumn": 1,
             "endLine": 22,
-            "endColumn": 1
+            "endColumn": 1,
         },
-        "address": "0x12345678"
+        "address": "0x12345678",
     }
-    
+
     physical_location = PhysicalLocation.model_validate(full_dict)
     assert physical_location.artifact_location.uri == "file:///src/file.py"
     assert physical_location.region.start_line == 10
@@ -107,9 +99,9 @@ def test_logical_location_from_dict():
         "decoratedName": "module::class::function_name()",
         "kind": "function",
         "parentIndex": 0,
-        "index": 1
+        "index": 1,
     }
-    
+
     logical_location = LogicalLocation.model_validate(full_dict)
     assert logical_location.name == "function_name"
     assert logical_location.full_name == "module.class.function_name"
@@ -134,27 +126,17 @@ def test_location_from_dict():
     full_dict = {
         "id": 1,
         "physicalLocation": {
-            "artifactLocation": {
-                "uri": "file:///src/file.py"
-            },
-            "region": {
-                "startLine": 10,
-                "startColumn": 5
-            }
+            "artifactLocation": {"uri": "file:///src/file.py"},
+            "region": {"startLine": 10, "startColumn": 5},
         },
         "logicalLocations": [
-            {
-                "name": "function_name",
-                "fullName": "module.function_name"
-            }
+            {"name": "function_name", "fullName": "module.function_name"}
         ],
-        "message": {
-            "text": "Location message"
-        },
+        "message": {"text": "Location message"},
         "annotations": [],
-        "relationships": []
+        "relationships": [],
     }
-    
+
     location = Location.model_validate(full_dict)
     assert location.id == 1
     assert location.physical_location.artifact_location.uri == "file:///src/file.py"

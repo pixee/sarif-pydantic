@@ -1,13 +1,15 @@
-import pytest
 from uuid import UUID
+
+import pytest
+
 from pydantic_sarif.sarif import (
-    ReportingDescriptorReference,
-    ToolComponentReference,
+    Message,
     ReportingConfiguration,
     ReportingDescriptor,
-    ToolDriver,
+    ReportingDescriptorReference,
     Tool,
-    Message,
+    ToolComponentReference,
+    ToolDriver,
 )
 
 
@@ -25,9 +27,9 @@ def test_reporting_descriptor_reference_from_dict():
         "id": "RULE001",
         "index": 0,
         "guid": "12345678-1234-5678-1234-567812345678",
-        "toolComponent": {"name": "TestTool"}
+        "toolComponent": {"name": "TestTool"},
     }
-    
+
     ref = ReportingDescriptorReference.model_validate(full_dict)
     assert ref.id == "RULE001"
     assert ref.index == 0
@@ -47,9 +49,9 @@ def test_tool_component_reference_from_dict():
     full_dict = {
         "name": "TestComponent",
         "index": 0,
-        "guid": "12345678-1234-5678-1234-567812345678"
+        "guid": "12345678-1234-5678-1234-567812345678",
     }
-    
+
     ref = ToolComponentReference.model_validate(full_dict)
     assert ref.name == "TestComponent"
     assert ref.index == 0
@@ -70,9 +72,9 @@ def test_reporting_configuration_from_dict():
         "enabled": False,
         "level": "warning",
         "rank": 75.5,
-        "parameters": {"key": "value"}
+        "parameters": {"key": "value"},
     }
-    
+
     config = ReportingConfiguration.model_validate(full_dict)
     assert config.enabled is False
     assert config.level == "warning"
@@ -82,10 +84,8 @@ def test_reporting_configuration_from_dict():
 
 def test_reporting_descriptor_from_dict():
     # Test minimal creation with required fields
-    minimal_dict = {
-        "id": "RULE001"
-    }
-    
+    minimal_dict = {"id": "RULE001"}
+
     descriptor = ReportingDescriptor.model_validate(minimal_dict)
     assert descriptor.id == "RULE001"
     assert descriptor.name is None
@@ -100,25 +100,16 @@ def test_reporting_descriptor_from_dict():
     full_dict = {
         "id": "RULE001",
         "name": "TestRule",
-        "shortDescription": {
-            "text": "Short description"
-        },
-        "fullDescription": {
-            "text": "Full description"
-        },
-        "defaultConfiguration": {
-            "enabled": True,
-            "level": "warning"
-        },
+        "shortDescription": {"text": "Short description"},
+        "fullDescription": {"text": "Full description"},
+        "defaultConfiguration": {"enabled": True, "level": "warning"},
         "helpUri": "https://example.com/help",
-        "help": {
-            "text": "Help message"
-        },
-        "relationships": []
+        "help": {"text": "Help message"},
+        "relationships": [],
     }
-    
+
     descriptor = ReportingDescriptor.model_validate(full_dict)
-    
+
     assert descriptor.id == "RULE001"
     assert descriptor.name == "TestRule"
     assert descriptor.short_description.text == "Short description"
@@ -131,10 +122,8 @@ def test_reporting_descriptor_from_dict():
 
 def test_tool_driver_from_dict():
     # Test minimal creation with required fields
-    minimal_dict = {
-        "name": "TestTool"
-    }
-    
+    minimal_dict = {"name": "TestTool"}
+
     driver = ToolDriver.model_validate(minimal_dict)
     assert driver.name == "TestTool"
     assert driver.full_name is None
@@ -154,30 +143,15 @@ def test_tool_driver_from_dict():
         "version": "1.0.0",
         "semanticVersion": "1.0.0",
         "informationUri": "https://example.com/tool",
-        "rules": [
-            {
-                "id": "RULE001",
-                "name": "TestRule"
-            }
-        ],
-        "notifications": [
-            {
-                "id": "NOTIF001",
-                "name": "TestNotification"
-            }
-        ],
-        "taxa": [
-            {
-                "id": "TAXA001",
-                "name": "TestTaxa"
-            }
-        ],
+        "rules": [{"id": "RULE001", "name": "TestRule"}],
+        "notifications": [{"id": "NOTIF001", "name": "TestNotification"}],
+        "taxa": [{"id": "TAXA001", "name": "TestTaxa"}],
         "language": "en-US",
-        "contents": ["localizedData", "nonLocalizedData"]
+        "contents": ["localizedData", "nonLocalizedData"],
     }
-    
+
     driver = ToolDriver.model_validate(full_dict)
-    
+
     assert driver.name == "TestTool"
     assert driver.full_name == "Test Tool Full Name"
     assert driver.version == "1.0.0"
@@ -192,12 +166,8 @@ def test_tool_driver_from_dict():
 
 def test_tool_from_dict():
     # Test minimal creation with required fields
-    minimal_dict = {
-        "driver": {
-            "name": "TestTool"
-        }
-    }
-    
+    minimal_dict = {"driver": {"name": "TestTool"}}
+
     tool = Tool.model_validate(minimal_dict)
     assert tool.driver.name == "TestTool"
     assert tool.extensions is None
@@ -207,19 +177,11 @@ def test_tool_from_dict():
         "driver": {
             "name": "TestTool",
             "version": "1.0.0",
-            "rules": [
-                {
-                    "id": "RULE001"
-                }
-            ]
+            "rules": [{"id": "RULE001"}],
         },
-        "extensions": [
-            {
-                "name": "TestExtension"
-            }
-        ]
+        "extensions": [{"name": "TestExtension"}],
     }
-    
+
     tool = Tool.model_validate(full_dict)
     assert tool.driver.name == "TestTool"
     assert tool.driver.version == "1.0.0"

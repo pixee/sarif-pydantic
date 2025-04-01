@@ -5,12 +5,13 @@ from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
 from uuid import UUID
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
 
 class SarifBaseModel(BaseModel):
     """Base model for all SARIF models with camelCase field serialization/deserialization."""
+
     model_config = ConfigDict(
         populate_by_name=True,
         alias_generator=to_camel,

@@ -1,12 +1,11 @@
 import pytest
-from pydantic_sarif.sarif import Message, ArtifactLocation, Artifact
+
+from pydantic_sarif.sarif import Artifact, ArtifactLocation, Message
 
 
 def test_message_from_dict():
     # Test minimal creation
-    minimal_dict = {
-        "text": "Test message"
-    }
+    minimal_dict = {"text": "Test message"}
     message = Message.model_validate(minimal_dict)
     assert message.text == "Test message"
     assert message.markdown is None
@@ -18,7 +17,7 @@ def test_message_from_dict():
         "text": "Test message",
         "markdown": "**Test** message",
         "id": "MSG001",
-        "arguments": ["arg1", "arg2"]
+        "arguments": ["arg1", "arg2"],
     }
     message = Message.model_validate(full_dict)
     assert message.text == "Test message"
@@ -41,9 +40,7 @@ def test_artifact_location_from_dict():
         "uri": "file:///src/file.py",
         "uriBaseId": "SRCROOT",
         "index": 0,
-        "description": {
-            "text": "Location description"
-        }
+        "description": {"text": "Location description"},
     }
     location = ArtifactLocation.model_validate(full_dict)
     assert location.uri == "file:///src/file.py"
@@ -71,9 +68,7 @@ def test_artifact_from_dict():
 
     # Test full creation
     full_dict = {
-        "location": {
-            "uri": "file:///src/file.py"
-        },
+        "location": {"uri": "file:///src/file.py"},
         "mimeType": "text/python",
         "encoding": "utf-8",
         "sourceLanguage": "python",
@@ -83,9 +78,7 @@ def test_artifact_from_dict():
         "offset": 0,
         "length": 100,
         "hashes": {"sha-256": "abcdef1234567890"},
-        "description": {
-            "text": "Artifact description"
-        }
+        "description": {"text": "Artifact description"},
     }
     artifact = Artifact.model_validate(full_dict)
     assert artifact.location.uri == "file:///src/file.py"

@@ -1,29 +1,25 @@
-import pytest
 from uuid import UUID
+
+import pytest
+
 from pydantic_sarif.sarif import (
-    Sarif,
+    Artifact,
+    ArtifactLocation,
+    Invocation,
+    LogicalLocation,
+    Message,
+    ReportingDescriptor,
+    Result,
     Run,
+    Sarif,
     Tool,
     ToolDriver,
-    Message,
-    Result,
-    ReportingDescriptor,
-    Invocation,
-    ArtifactLocation,
-    Artifact,
-    LogicalLocation,
 )
 
 
 def test_run_from_dict():
     # Test minimal creation with required fields
-    minimal_dict = {
-        "tool": {
-            "driver": {
-                "name": "TestTool"
-            }
-        }
-    }
+    minimal_dict = {"tool": {"driver": {"name": "TestTool"}}}
     run = Run.model_validate(minimal_dict)
     assert run.tool.driver.name == "TestTool"
     assert run.invocations is None
@@ -51,61 +47,21 @@ def test_run_from_dict():
             "driver": {
                 "name": "TestTool",
                 "version": "1.0.0",
-                "rules": [
-                    {
-                        "id": "RULE001",
-                        "name": "TestRule"
-                    }
-                ]
+                "rules": [{"id": "RULE001", "name": "TestRule"}],
             }
         },
-        "invocations": [
-            {
-                "executionSuccessful": True
-            }
-        ],
-        "conversion": {
-            "tool": {
-                "driver": {
-                    "name": "Converter"
-                }
-            }
-        },
+        "invocations": [{"executionSuccessful": True}],
+        "conversion": {"tool": {"driver": {"name": "Converter"}}},
         "language": "en-US",
         "versionControlProvenance": [
-            {
-                "repositoryUri": "https://github.com/example/repo"
-            }
+            {"repositoryUri": "https://github.com/example/repo"}
         ],
-        "originalUriBaseIds": {
-            "SRCROOT": {
-                "uri": "file:///src/"
-            }
-        },
-        "artifacts": [
-            {
-                "location": {
-                    "uri": "file:///src/file.py"
-                }
-            }
-        ],
-        "logicalLocations": [
-            {
-                "name": "function_name"
-            }
-        ],
+        "originalUriBaseIds": {"SRCROOT": {"uri": "file:///src/"}},
+        "artifacts": [{"location": {"uri": "file:///src/file.py"}}],
+        "logicalLocations": [{"name": "function_name"}],
         "graphs": [],
-        "results": [
-            {
-                "message": {
-                    "text": "Result message"
-                },
-                "ruleId": "RULE001"
-            }
-        ],
-        "automationDetails": {
-            "id": "TEST-ID-123"
-        },
+        "results": [{"message": {"text": "Result message"}, "ruleId": "RULE001"}],
+        "automationDetails": {"id": "TEST-ID-123"},
         "baselineGuid": "12345678-1234-5678-1234-567812345678",
         "redactionTokens": ["SECRET"],
         "defaultEncoding": "utf-8",
@@ -113,18 +69,19 @@ def test_run_from_dict():
         "newlineSequences": ["\n", "\r\n"],
         "toolExtensions": [],
         "notifications": [],
-        "properties": {
-            "key": "value"
-        }
+        "properties": {"key": "value"},
     }
-    
+
     run = Run.model_validate(full_dict)
-    
+
     assert run.tool.driver.name == "TestTool"
     assert run.invocations[0].execution_successful is True
     assert run.conversion == {"tool": {"driver": {"name": "Converter"}}}
     assert run.language == "en-US"
-    assert run.version_control_provenance[0]["repositoryUri"] == "https://github.com/example/repo"
+    assert (
+        run.version_control_provenance[0]["repositoryUri"]
+        == "https://github.com/example/repo"
+    )
     assert run.original_uri_base_ids["SRCROOT"]["uri"] == "file:///src/"
     assert run.artifacts[0].location.uri == "file:///src/file.py"
     assert run.logical_locations[0].name == "function_name"
@@ -145,19 +102,11 @@ def test_sarif_from_dict():
     # Test minimal creation with required fields
     minimal_dict = {
         "version": "2.1.0",
-        "runs": [
-            {
-                "tool": {
-                    "driver": {
-                        "name": "TestTool"
-                    }
-                }
-            }
-        ]
+        "runs": [{"tool": {"driver": {"name": "TestTool"}}}],
     }
-    
+
     sarif = Sarif.model_validate(minimal_dict)
-    
+
     assert sarif.version == "2.1.0"
     assert sarif.schema_uri is None
     assert len(sarif.runs) == 1
@@ -169,25 +118,18 @@ def test_sarif_from_dict():
     full_dict = {
         "version": "2.1.0",
         "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
-        "runs": [
-            {
-                "tool": {
-                    "driver": {
-                        "name": "TestTool"
-                    }
-                }
-            }
-        ],
+        "runs": [{"tool": {"driver": {"name": "TestTool"}}}],
         "inlineExternalProperties": [],
-        "properties": {
-            "key": "value"
-        }
+        "properties": {"key": "value"},
     }
-    
+
     sarif = Sarif.model_validate(full_dict)
-    
+
     assert sarif.version == "2.1.0"
-    assert sarif.schema_uri == "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json"
+    assert (
+        sarif.schema_uri
+        == "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json"
+    )
     assert len(sarif.runs) == 1
     assert sarif.runs[0].tool.driver.name == "TestTool"
     assert sarif.inline_external_properties == []
@@ -199,25 +141,13 @@ def test_sarif_with_multiple_runs_from_dict():
     multi_run_dict = {
         "version": "2.1.0",
         "runs": [
-            {
-                "tool": {
-                    "driver": {
-                        "name": "Tool1"
-                    }
-                }
-            },
-            {
-                "tool": {
-                    "driver": {
-                        "name": "Tool2"
-                    }
-                }
-            }
-        ]
+            {"tool": {"driver": {"name": "Tool1"}}},
+            {"tool": {"driver": {"name": "Tool2"}}},
+        ],
     }
-    
+
     sarif = Sarif.model_validate(multi_run_dict)
-    
+
     assert len(sarif.runs) == 2
     assert sarif.runs[0].tool.driver.name == "Tool1"
     assert sarif.runs[1].tool.driver.name == "Tool2"

@@ -1,11 +1,12 @@
 import pytest
+
 from pydantic_sarif.sarif import (
-    Level,
-    Result,
-    Message,
     ArtifactLocation,
+    Level,
     Location,
+    Message,
     ReportingDescriptorReference,
+    Result,
 )
 
 
@@ -18,12 +19,8 @@ def test_level_enum():
 
 def test_result_from_dict():
     # Test minimal creation with required fields
-    minimal_dict = {
-        "message": {
-            "text": "Result message"
-        }
-    }
-    
+    minimal_dict = {"message": {"text": "Result message"}}
+
     result = Result.model_validate(minimal_dict)
     assert result.message.text == "Result message"
     assert result.rule_id is None
@@ -51,27 +48,20 @@ def test_result_from_dict():
     full_dict = {
         "ruleId": "RULE001",
         "ruleIndex": 0,
-        "rule": {
-            "id": "RULE001",
-            "index": 0
-        },
+        "rule": {"id": "RULE001", "index": 0},
         "kind": "fail",
         "level": "error",
-        "message": {
-            "text": "Result message"
-        },
+        "message": {"text": "Result message"},
         "locations": [
             {
                 "id": 1,
                 "physicalLocation": {
                     "artifactLocation": {"uri": "file:///src/file.py"},
-                    "region": {"startLine": 10, "startColumn": 5}
-                }
+                    "region": {"startLine": 10, "startColumn": 5},
+                },
             }
         ],
-        "analysisTarget": {
-            "uri": "file:///src/file.py"
-        },
+        "analysisTarget": {"uri": "file:///src/file.py"},
         "fixes": [],
         "occurrences": [],
         "stacks": [],
@@ -83,23 +73,20 @@ def test_result_from_dict():
                 "id": 2,
                 "physicalLocation": {
                     "artifactLocation": {"uri": "file:///src/related.py"},
-                    "region": {"startLine": 20, "startColumn": 15}
-                }
+                    "region": {"startLine": 20, "startColumn": 15},
+                },
             }
         ],
-        "suppression": {
-            "kind": "inSource", 
-            "status": "accepted"
-        },
+        "suppression": {"kind": "inSource", "status": "accepted"},
         "rank": 95.0,
         "attachments": [],
         "hostedViewerUri": "https://example.com/viewer",
         "workItemUris": ["https://example.com/issue/123"],
-        "properties": {"key": "value"}
+        "properties": {"key": "value"},
     }
-    
+
     result = Result.model_validate(full_dict)
-    
+
     assert result.rule_id == "RULE001"
     assert result.rule_index == 0
     assert result.rule.id == "RULE001"

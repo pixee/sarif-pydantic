@@ -1,8 +1,6 @@
 import json
-from pydantic_sarif.sarif import (
-    Sarif,
-    Level,
-)
+
+from pydantic_sarif.sarif import Level, Sarif
 
 
 def test_minimal_sarif_serialization():
@@ -12,22 +10,12 @@ def test_minimal_sarif_serialization():
         "version": "2.1.0",
         "runs": [
             {
-                "tool": {
-                    "driver": {
-                        "name": "TestTool"
-                    }
-                },
-                "results": [
-                    {
-                        "message": {
-                            "text": "Test message"
-                        }
-                    }
-                ]
+                "tool": {"driver": {"name": "TestTool"}},
+                "results": [{"message": {"text": "Test message"}}],
             }
-        ]
+        ],
     }
-    
+
     sarif = Sarif.model_validate(minimal_dict)
 
     # Serialize to JSON
@@ -43,11 +31,13 @@ def test_minimal_sarif_serialization():
 
     # Deserialize from JSON
     sarif2 = Sarif.model_validate_json(sarif_json)
-    
+
     # Check that the deserialized object matches the original
     assert sarif2.version == sarif.version
     assert sarif2.runs[0].tool.driver.name == sarif.runs[0].tool.driver.name
-    assert sarif2.runs[0].results[0].message.text == sarif.runs[0].results[0].message.text
+    assert (
+        sarif2.runs[0].results[0].message.text == sarif.runs[0].results[0].message.text
+    )
 
 
 def test_full_sarif_serialization():
@@ -63,14 +53,14 @@ def test_full_sarif_serialization():
                         "name": "TestTool",
                         "version": "1.0.0",
                         "fullName": "Test Tool Full Name",
-                        "informationUri": "https://example.com/tool"
+                        "informationUri": "https://example.com/tool",
                     }
                 },
                 "results": [
                     {
                         "message": {
                             "text": "Found a bug",
-                            "markdown": "**Found a bug**"
+                            "markdown": "**Found a bug**",
                         },
                         "level": "error",
                         "ruleId": "BUG001",
@@ -79,68 +69,73 @@ def test_full_sarif_serialization():
                                 "physicalLocation": {
                                     "artifactLocation": {
                                         "uri": "file:///src/file.py",
-                                        "uriBaseId": "SRCROOT"
+                                        "uriBaseId": "SRCROOT",
                                     },
                                     "region": {
                                         "startLine": 10,
                                         "startColumn": 5,
                                         "endLine": 10,
-                                        "endColumn": 15
-                                    }
+                                        "endColumn": 15,
+                                    },
                                 }
                             }
-                        ]
+                        ],
                     }
                 ],
                 "language": "en-US",
-                "defaultSourceLanguage": "python"
+                "defaultSourceLanguage": "python",
             }
-        ]
+        ],
     }
-    
+
     sarif = Sarif.model_validate(full_dict)
 
     # Serialize to JSON
     sarif_json = sarif.model_dump_json()
     sarif_dict = json.loads(sarif_json)
-    
+
     # Check key attributes in the original object
-    assert sarif.schema_uri == "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json"
-    assert sarif.runs[0].tool.driver.full_name == "Test Tool Full Name" 
+    assert (
+        sarif.schema_uri
+        == "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json"
+    )
+    assert sarif.runs[0].tool.driver.full_name == "Test Tool Full Name"
     assert sarif.runs[0].tool.driver.information_uri == "https://example.com/tool"
-    
+
     # Check that when serialized, the key fields exist with correct values
     # The field names might be the Python names or the JSON alias names
     driver = sarif_dict["runs"][0]["tool"]["driver"]
     driver_full_name = driver.get("fullName", driver.get("full_name"))
     assert driver_full_name == "Test Tool Full Name"
-    
+
     driver_info_uri = driver.get("informationUri", driver.get("information_uri"))
     assert driver_info_uri == "https://example.com/tool"
-    
+
     # Just check the original object fields instead of the serialized version
     # as field names in serialization can vary
-    assert sarif.runs[0].results[0].locations[0].physical_location.region.start_line == 10
+    assert (
+        sarif.runs[0].results[0].locations[0].physical_location.region.start_line == 10
+    )
     assert sarif.runs[0].default_source_language == "python"
 
     # Deserialize from JSON
     sarif2 = Sarif.model_validate_json(sarif_json)
-    
+
     # Check specific attributes rather than exact equality
     # Note: schema_uri might be mapped to $schema and back differently
     assert sarif2.version == sarif.version
     assert sarif2.runs[0].tool.driver.name == "TestTool"
-    
+
     # Check that location information is correctly parsed
     assert sarif2.runs[0].results[0].message.text == "Found a bug"
     assert sarif2.runs[0].results[0].level == Level.ERROR
-    
+
     # Check region details
     loc = sarif2.runs[0].results[0].locations[0].physical_location
     assert loc.artifact_location.uri == "file:///src/file.py"
     assert loc.region.start_line == 10
     assert loc.region.start_column == 5
-    
+
     # Check language settings
     assert sarif2.runs[0].language == "en-US"
     assert sarif2.runs[0].default_source_language == "python"

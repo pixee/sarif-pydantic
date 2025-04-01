@@ -1,8 +1,8 @@
 from pathlib import Path
 
 from pydantic_sarif.sarif import (
-    ArtifactLocation,
     Artifact,
+    ArtifactLocation,
     Invocation,
     Level,
     Location,
