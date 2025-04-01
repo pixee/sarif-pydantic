@@ -150,6 +150,8 @@ class Result(SarifBaseModel):
     message: Message
     locations: Optional[List[Location]] = None
     analysis_target: Optional[ArtifactLocation] = None
+    guid: Optional[UUID] = None
+    correlation_guid: Optional[UUID] = None
     fixes: Optional[List[Any]] = None
     occurrences: Optional[List[Any]] = None
     stacks: Optional[List[Any]] = None
