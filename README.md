@@ -31,7 +31,7 @@ from sarif_pydantic import (
     Region, 
     Result, 
     Run, 
-    SarifLog, 
+    Sarif, 
     Tool, 
     ToolDriver
 )
@@ -71,7 +71,7 @@ result = Result(
 )
 
 # Create a SARIF log
-sarif_log = SarifLog(
+sarif_log = Sarif(
     version="2.1.0",
     runs=[Run(
         tool=tool,
@@ -91,14 +91,14 @@ print(sarif_json)
 
 ```python
 import json
-from sarif_pydantic import SarifLog
+from sarif_pydantic import Sarif
 
 # Load from a file
 with open("example.sarif", "r") as f:
     sarif_data = json.load(f)
 
-# Parse into a SarifLog object
-sarif_log = SarifLog.model_validate(sarif_data)
+# Parse into a Sarif object
+sarif_log = Sarif.model_validate(sarif_data)
 
 # Access data via typed objects
 for run in sarif_log.runs:
