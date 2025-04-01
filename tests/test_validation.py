@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from pydantic_sarif.sarif import (
+from sarif_pydantic.sarif import (
     Level,
     Message,
     ReportingDescriptor,

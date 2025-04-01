@@ -1,4 +1,4 @@
-# pydantic-sarif
+# sarif-pydantic
 
 An implementation of the [SARIF](https://sarifweb.azurewebsites.net/) (Static Analysis Results Interchange Format) format using [Pydantic](https://pydantic-docs.helpmanual.io/).
 
@@ -13,7 +13,7 @@ This library provides Pydantic models for working with the SARIF specification (
 ## Installation
 
 ```bash
-pip install pydantic-sarif
+pip install sarif-pydantic
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ pip install pydantic-sarif
 ### Creating a SARIF Log
 
 ```python
-from pydantic_sarif import (
+from sarif_pydantic import (
     ArtifactLocation, 
     Invocation, 
     Level, 
@@ -91,7 +91,7 @@ print(sarif_json)
 
 ```python
 import json
-from pydantic_sarif import SarifLog
+from sarif_pydantic import SarifLog
 
 # Load from a file
 with open("example.sarif", "r") as f:

@@ -1,6 +1,6 @@
 import pytest
 
-from pydantic_sarif.sarif import (
+from sarif_pydantic.sarif import (
     ArtifactLocation,
     Level,
     Location,

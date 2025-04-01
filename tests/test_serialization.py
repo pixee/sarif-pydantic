@@ -1,6 +1,6 @@
 import json
 
-from pydantic_sarif.sarif import Level, Sarif
+from sarif_pydantic.sarif import Level, Sarif
 
 
 def test_minimal_sarif_serialization():

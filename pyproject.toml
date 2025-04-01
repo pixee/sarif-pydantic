@@ -1,5 +1,5 @@
 [project]
-name = "pydantic-sarif"
+name = "sarif-pydantic"
 version = "0.1.0"
 description = ""
 authors = [
@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [tool.poetry]
-packages = [{include = "pydantic_sarif", from = "src"}]
+packages = [{include = "sarif_pydantic", from = "src"}]
 
 
 [tool.poetry.group.test.dependencies]

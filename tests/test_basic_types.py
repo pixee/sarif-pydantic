@@ -1,6 +1,6 @@
 import pytest
 
-from pydantic_sarif.sarif import Artifact, ArtifactLocation, Message
+from sarif_pydantic.sarif import Artifact, ArtifactLocation, Message
 
 
 def test_message_from_dict():

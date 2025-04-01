@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from pydantic_sarif.sarif import ArtifactLocation, Invocation
+from sarif_pydantic.sarif import ArtifactLocation, Invocation
 
 
 def test_invocation_from_dict():

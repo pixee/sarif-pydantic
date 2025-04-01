@@ -2,7 +2,7 @@ from uuid import UUID
 
 import pytest
 
-from pydantic_sarif.sarif import (
+from sarif_pydantic.sarif import (
     Message,
     ReportingConfiguration,
     ReportingDescriptor,
