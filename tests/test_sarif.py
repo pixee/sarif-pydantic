@@ -37,7 +37,6 @@ def test_run_from_dict():
     assert run.default_encoding is None
     assert run.default_source_language is None
     assert run.newline_sequences is None
-    assert run.tool_extensions is None
     assert run.notifications is None
     assert run.properties is None
 
@@ -93,7 +92,6 @@ def test_run_from_dict():
     assert run.default_encoding == "utf-8"
     assert run.default_source_language == "python"
     assert run.newline_sequences == ["\n", "\r\n"]
-    assert run.tool_extensions == []
     assert run.notifications == []
     assert run.properties == {"key": "value"}
 

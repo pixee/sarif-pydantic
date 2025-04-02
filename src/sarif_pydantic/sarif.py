@@ -185,7 +185,7 @@ class ReportingDescriptorReference(SarifBaseModel):
     id: Optional[str] = None
     index: Optional[int] = None
     guid: Optional[UUID] = None
-    tool_component: Optional[Any] = None
+    tool_component: Optional[ToolComponentReference] = None
 
 
 class ToolComponentReference(SarifBaseModel):
@@ -415,7 +415,6 @@ class Run(SarifBaseModel):
     default_encoding: Optional[str] = None
     default_source_language: Optional[str] = None
     newline_sequences: Optional[List[str]] = None
-    tool_extensions: Optional[List[ToolComponent]] = None
     notifications: Optional[List[Notification]] = None
     properties: Optional[Dict[str, Any]] = None
 
