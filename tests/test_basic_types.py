@@ -1,5 +1,3 @@
-import pytest
-
 from sarif_pydantic.sarif import Artifact, ArtifactContent, ArtifactLocation, Message
 
 

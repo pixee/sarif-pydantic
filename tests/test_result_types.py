@@ -1,15 +1,6 @@
 from uuid import UUID
 
-import pytest
-
-from sarif_pydantic.sarif import (
-    ArtifactLocation,
-    Level,
-    Location,
-    Message,
-    ReportingDescriptorReference,
-    Result,
-)
+from sarif_pydantic.sarif import Level, Result
 
 
 def test_level_enum():

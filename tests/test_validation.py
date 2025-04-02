@@ -3,7 +3,6 @@ from pydantic import ValidationError
 
 from sarif_pydantic.sarif import (
     Level,
-    Message,
     ReportingDescriptor,
     Result,
     Run,

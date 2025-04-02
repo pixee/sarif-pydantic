@@ -1,20 +1,6 @@
 from uuid import UUID
 
-import pytest
-
-from sarif_pydantic.sarif import (
-    Artifact,
-    ArtifactLocation,
-    Invocation,
-    LogicalLocation,
-    Message,
-    ReportingDescriptor,
-    Result,
-    Run,
-    Sarif,
-    Tool,
-    ToolDriver,
-)
+from sarif_pydantic.sarif import Run, Sarif
 
 
 def test_run_from_dict():

@@ -1,10 +1,7 @@
-import pytest
-
 from sarif_pydantic.sarif import (
     ArtifactContent,
     Location,
     LogicalLocation,
-    Message,
     PhysicalLocation,
     Region,
 )

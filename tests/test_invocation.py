@@ -1,7 +1,5 @@
 from datetime import datetime, timezone
 
-import pytest
-
 from sarif_pydantic.sarif import ArtifactLocation, Invocation
 
 
