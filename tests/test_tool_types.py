@@ -8,6 +8,7 @@ from sarif_pydantic.sarif import (
     ReportingDescriptor,
     ReportingDescriptorReference,
     Tool,
+    ToolComponent,
     ToolComponentReference,
     ToolDriver,
 )
@@ -186,4 +187,4 @@ def test_tool_from_dict():
     assert tool.driver.name == "TestTool"
     assert tool.driver.version == "1.0.0"
     assert tool.driver.rules[0].id == "RULE001"
-    assert tool.extensions == [{"name": "TestExtension"}]
+    assert tool.extensions == [ToolComponent(name="TestExtension")]

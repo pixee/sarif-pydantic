@@ -32,6 +32,15 @@ class ArtifactLocation(SarifBaseModel):
     description: Optional[Message] = None
 
 
+class ArtifactContent(SarifBaseModel):
+    """Represents the contents of an artifact."""
+
+    text: Optional[str] = None
+    binary: Optional[str] = None
+    rendered: Optional[Message] = None
+    # Actually the spec allows properties here too, but omitting for simplicity
+
+
 class Region(SarifBaseModel):
     start_line: Optional[int] = None
     start_column: Optional[int] = None
@@ -41,7 +50,7 @@ class Region(SarifBaseModel):
     char_length: Optional[int] = None
     byte_offset: Optional[int] = None
     byte_length: Optional[int] = None
-    snippet: Optional[Any] = None
+    snippet: Optional[ArtifactContent] = None
     message: Optional[Message] = None
 
 
@@ -51,7 +60,7 @@ class Artifact(SarifBaseModel):
     encoding: Optional[str] = None
     source_language: Optional[str] = None
     roles: Optional[List[str]] = None
-    contents: Optional[Any] = None
+    contents: Optional[ArtifactContent] = None
     parent_index: Optional[int] = None
     offset: Optional[int] = None
     length: Optional[int] = None
@@ -99,7 +108,7 @@ class WebRequest(SarifBaseModel):
     method: Optional[str] = None
     headers: Optional[Dict[str, str]] = None
     parameters: Optional[Dict[str, str]] = None
-    body: Optional[Dict[str, Any]] = None
+    body: Optional[ArtifactContent] = None
     properties: Optional[Dict[str, Any]] = None
 
 
@@ -111,7 +120,7 @@ class WebResponse(SarifBaseModel):
     status_code: Optional[int] = None
     reason_phrase: Optional[str] = None
     headers: Optional[Dict[str, str]] = None
-    body: Optional[Dict[str, Any]] = None
+    body: Optional[ArtifactContent] = None
     no_response_received: Optional[bool] = None
     properties: Optional[Dict[str, Any]] = None
 
@@ -172,13 +181,31 @@ class CodeFlow(SarifBaseModel):
     properties: Optional[Dict[str, Any]] = None
 
 
+class RegionAnnotation(SarifBaseModel):
+    """Describes the location of a region using a sequence of words."""
+
+    start_index: int
+    end_index: int
+    message: Optional[Message] = None
+    properties: Optional[Dict[str, Any]] = None
+
+
+class LocationRelationship(SarifBaseModel):
+    """Represents a relationship between two locations."""
+
+    target: int
+    kinds: Optional[List[str]] = None
+    description: Optional[Message] = None
+    properties: Optional[Dict[str, Any]] = None
+
+
 class Location(SarifBaseModel):
     id: Optional[int] = None
     physical_location: Optional[PhysicalLocation] = None
     logical_locations: Optional[List[LogicalLocation]] = None
     message: Optional[Message] = None
-    annotations: Optional[List[Any]] = None
-    relationships: Optional[List[Any]] = None
+    annotations: Optional[List[RegionAnnotation]] = None
+    relationships: Optional[List[LocationRelationship]] = None
 
 
 class ReportingDescriptorReference(SarifBaseModel):
@@ -186,6 +213,15 @@ class ReportingDescriptorReference(SarifBaseModel):
     index: Optional[int] = None
     guid: Optional[UUID] = None
     tool_component: Optional[ToolComponentReference] = None
+
+
+class ReportingDescriptorRelationship(SarifBaseModel):
+    """A relationship between a reporting descriptor and a related reporting descriptor."""
+
+    target: ReportingDescriptorReference
+    kinds: Optional[List[str]] = None
+    description: Optional[Message] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ToolComponentReference(SarifBaseModel):
@@ -209,7 +245,7 @@ class ReportingDescriptor(SarifBaseModel):
     default_configuration: Optional[ReportingConfiguration] = None
     help_uri: Optional[str] = None
     help: Optional[Message] = None
-    relationships: Optional[List[Any]] = None
+    relationships: Optional[List[ReportingDescriptorRelationship]] = None
 
 
 class ToolDriver(SarifBaseModel):
@@ -227,7 +263,7 @@ class ToolDriver(SarifBaseModel):
 
 class Tool(SarifBaseModel):
     driver: ToolDriver
-    extensions: Optional[List[Any]] = None
+    extensions: Optional[List[ToolComponent]] = None
 
 
 class Level(str, Enum):
@@ -237,11 +273,19 @@ class Level(str, Enum):
     ERROR = "error"
 
 
+class Replacement(SarifBaseModel):
+    """Represents a replacement of a region of bytes in a file."""
+
+    deleted_region: Region
+    inserted_content: Optional[ArtifactContent] = None
+    properties: Optional[Dict[str, Any]] = None
+
+
 class ArtifactChange(SarifBaseModel):
     """Describes a change to a single artifact."""
 
     artifact_location: ArtifactLocation
-    replacements: List[Dict[str, Any]]
+    replacements: List[Replacement]
     properties: Optional[Dict[str, Any]] = None
 
 
@@ -262,12 +306,41 @@ class Occurrence(SarifBaseModel):
     properties: Optional[Dict[str, Any]] = None
 
 
+class Node(SarifBaseModel):
+    """Represents a node in a graph."""
+
+    id: str
+    label: Optional[Message] = None
+    location: Optional[Location] = None
+    children: Optional[List[str]] = None
+    properties: Optional[Dict[str, Any]] = None
+
+
+class Edge(SarifBaseModel):
+    """Represents a directed edge in a graph."""
+
+    id: str
+    source_node_id: str
+    target_node_id: str
+    label: Optional[Message] = None
+    properties: Optional[Dict[str, Any]] = None
+
+
 class Graph(SarifBaseModel):
     """Represents a directed graph."""
 
     description: Optional[Message] = None
-    nodes: Optional[List[Dict[str, Any]]] = None
-    edges: Optional[List[Dict[str, Any]]] = None
+    nodes: Optional[List[Node]] = None
+    edges: Optional[List[Edge]] = None
+    properties: Optional[Dict[str, Any]] = None
+
+
+class EdgeTraversal(SarifBaseModel):
+    """Represents the traversal of a single edge during a graph traversal."""
+
+    edge_id: str
+    final_state: Optional[Dict[str, Any]] = None
+    message: Optional[Message] = None
     properties: Optional[Dict[str, Any]] = None
 
 
@@ -277,7 +350,7 @@ class GraphTraversal(SarifBaseModel):
     result_graph_index: Optional[int] = None
     run_graph_index: Optional[int] = None
     description: Optional[Message] = None
-    edge_traversals: Optional[List[Dict[str, Any]]] = None
+    edge_traversals: Optional[List[EdgeTraversal]] = None
     properties: Optional[Dict[str, Any]] = None
 
 
@@ -289,6 +362,16 @@ class Suppression(SarifBaseModel):
     location: Optional[Location] = None
     guid: Optional[UUID] = None
     justification: Optional[str] = None
+    properties: Optional[Dict[str, Any]] = None
+
+
+class Attachment(SarifBaseModel):
+    """An artifact relevant to a result."""
+
+    description: Optional[Message] = None
+    artifact_location: ArtifactLocation
+    regions: Optional[List[Region]] = None
+    rectangles: Optional[List[Dict[str, Any]]] = None  # For simplicity, keeping as Dict
     properties: Optional[Dict[str, Any]] = None
 
 
@@ -312,7 +395,7 @@ class Result(SarifBaseModel):
     related_locations: Optional[List[Location]] = None
     suppression: Optional[Suppression] = None
     rank: Optional[float] = None
-    attachments: Optional[List[Any]] = None
+    attachments: Optional[List[Attachment]] = None
     hosted_viewer_uri: Optional[str] = None
     work_item_uris: Optional[List[str]] = None
     properties: Optional[Dict[str, Any]] = None
@@ -321,7 +404,7 @@ class Result(SarifBaseModel):
 class Invocation(SarifBaseModel):
     command_line: Optional[str] = None
     arguments: Optional[List[str]] = None
-    response_files: Optional[List[Any]] = None
+    response_files: Optional[List[ArtifactLocation]] = None
     start_time_utc: Optional[datetime] = None
     end_time_utc: Optional[datetime] = None
     execution_successful: bool
@@ -384,6 +467,16 @@ class ToolComponent(SarifBaseModel):
     properties: Optional[Dict[str, Any]] = None
 
 
+class ExceptionData(SarifBaseModel):
+    """Describes a runtime exception encountered during the execution of an analysis tool."""
+
+    kind: Optional[str] = None
+    message: Optional[str] = None
+    stack: Optional[Stack] = None
+    inner_exceptions: Optional[List["ExceptionData"]] = None
+    properties: Optional[Dict[str, Any]] = None
+
+
 class Notification(SarifBaseModel):
     """Describes a condition relevant to a tool's operation."""
 
@@ -393,7 +486,7 @@ class Notification(SarifBaseModel):
     message: Message
     locations: Optional[List[Location]] = None
     time_utc: Optional[datetime] = None
-    exception: Optional[Dict[str, Any]] = None
+    exception: Optional[ExceptionData] = None
     thread_id: Optional[int] = None
     properties: Optional[Dict[str, Any]] = None
 
@@ -461,3 +554,4 @@ class Sarif(SarifBaseModel):
 # Update forward references for classes with circular dependencies
 StackFrame.model_rebuild()
 ThreadFlowLocation.model_rebuild()
+ExceptionData.model_rebuild()

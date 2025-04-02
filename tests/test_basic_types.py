@@ -1,6 +1,6 @@
 import pytest
 
-from sarif_pydantic.sarif import Artifact, ArtifactLocation, Message
+from sarif_pydantic.sarif import Artifact, ArtifactContent, ArtifactLocation, Message
 
 
 def test_message_from_dict():
@@ -73,7 +73,7 @@ def test_artifact_from_dict():
         "encoding": "utf-8",
         "sourceLanguage": "python",
         "roles": ["driver"],
-        "contents": "print('Hello, world!')",
+        "contents": {"text": "print('Hello, world!')"},
         "parentIndex": 0,
         "offset": 0,
         "length": 100,
@@ -86,7 +86,7 @@ def test_artifact_from_dict():
     assert artifact.encoding == "utf-8"
     assert artifact.source_language == "python"
     assert artifact.roles == ["driver"]
-    assert artifact.contents == "print('Hello, world!')"
+    assert artifact.contents == ArtifactContent(text="print('Hello, world!')")
     assert artifact.parent_index == 0
     assert artifact.offset == 0
     assert artifact.length == 100

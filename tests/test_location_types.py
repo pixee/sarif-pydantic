@@ -1,7 +1,7 @@
 import pytest
 
 from sarif_pydantic.sarif import (
-    ArtifactLocation,
+    ArtifactContent,
     Location,
     LogicalLocation,
     Message,
@@ -35,7 +35,7 @@ def test_region_from_dict():
         "charLength": 200,
         "byteOffset": 300,
         "byteLength": 400,
-        "snippet": "code snippet",
+        "snippet": {"text": "code snippet"},
         "message": {"text": "Region message"},
     }
 
@@ -48,7 +48,7 @@ def test_region_from_dict():
     assert region.char_length == 200
     assert region.byte_offset == 300
     assert region.byte_length == 400
-    assert region.snippet == "code snippet"
+    assert region.snippet == ArtifactContent(text="code snippet")
     assert region.message.text == "Region message"
 
 

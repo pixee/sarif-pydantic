@@ -55,7 +55,9 @@ def test_invocation_from_dict():
 
     assert invocation.command_line == "pylint src/"
     assert invocation.arguments == ["--rcfile=.pylintrc", "src/"]
-    assert invocation.response_files == [{"uri": "file:///project/.pylintrc"}]
+    assert invocation.response_files == [
+        ArtifactLocation(uri="file:///project/.pylintrc")
+    ]
     assert invocation.start_time_utc == start_time
     assert invocation.end_time_utc == end_time
     assert invocation.execution_successful is True
