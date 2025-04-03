@@ -389,6 +389,8 @@ class Result(SarifBaseModel):
     correlation_guid: Optional[UUID] = None
     fixes: Optional[List[Fix]] = None
     occurrences: Optional[List[Occurrence]] = None
+    partial_fingerprints: Optional[Dict[str, str]] = None
+    fingerprints: Optional[Dict[str, str]] = None
     stacks: Optional[List[Stack]] = None
     code_flows: Optional[List[CodeFlow]] = None
     graphs: Optional[List[Graph]] = None
