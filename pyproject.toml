@@ -1,6 +1,6 @@
 [project]
 name = "sarif-pydantic"
-version = "0.5.0"
+version = "0.5.1"
 description = ""
 authors = [
     {name = "Daniel D'Avella",email = "drdavella@gmail.com"},
@@ -8,7 +8,7 @@ authors = [
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "pydantic (>=2.11.0,<3.0.0)"
+    "pydantic~=2.10.6"
 ]
 
 [tool.poetry]
