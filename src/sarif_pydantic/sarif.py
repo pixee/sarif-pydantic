@@ -98,6 +98,7 @@ class LogicalLocation(SarifBaseModel):
     kind: Optional[str] = None
     parent_index: Optional[int] = None
     index: Optional[int] = None
+    fully_qualified_name: Optional[str] = None
 
 
 class WebRequest(SarifBaseModel):
