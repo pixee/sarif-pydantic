@@ -113,4 +113,4 @@ This implementation follows the [SARIF 2.1.0 specification](https://docs.oasis-o
 
 ## License
 
-[LICENSE]
+[LICENSE] 
