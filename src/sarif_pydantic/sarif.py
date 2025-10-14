@@ -182,15 +182,6 @@ class CodeFlow(SarifBaseModel):
     properties: Optional[Dict[str, Any]] = None
 
 
-class RegionAnnotation(SarifBaseModel):
-    """Describes the location of a region using a sequence of words."""
-
-    start_index: int
-    end_index: int
-    message: Optional[Message] = None
-    properties: Optional[Dict[str, Any]] = None
-
-
 class LocationRelationship(SarifBaseModel):
     """Represents a relationship between two locations."""
 
@@ -205,7 +196,7 @@ class Location(SarifBaseModel):
     physical_location: Optional[PhysicalLocation] = None
     logical_locations: Optional[List[LogicalLocation]] = None
     message: Optional[Message] = None
-    annotations: Optional[List[RegionAnnotation]] = None
+    annotations: Optional[List[Region]] = None
     relationships: Optional[List[LocationRelationship]] = None
 
 
