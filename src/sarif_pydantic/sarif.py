@@ -3,7 +3,6 @@ from __future__ import annotations
 from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional
-from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
@@ -213,7 +212,7 @@ class Location(SarifBaseModel):
 class ReportingDescriptorReference(SarifBaseModel):
     id: Optional[str] = None
     index: Optional[int] = None
-    guid: Optional[UUID] = None
+    guid: Optional[str] = None
     tool_component: Optional[ToolComponentReference] = None
 
 
@@ -229,7 +228,7 @@ class ReportingDescriptorRelationship(SarifBaseModel):
 class ToolComponentReference(SarifBaseModel):
     name: Optional[str] = None
     index: Optional[int] = None
-    guid: Optional[UUID] = None
+    guid: Optional[str] = None
 
 
 class ReportingConfiguration(SarifBaseModel):
@@ -362,7 +361,7 @@ class Suppression(SarifBaseModel):
     kind: str
     status: Optional[str] = None
     location: Optional[Location] = None
-    guid: Optional[UUID] = None
+    guid: Optional[str] = None
     justification: Optional[str] = None
     properties: Optional[Dict[str, Any]] = None
 
@@ -386,8 +385,8 @@ class Result(SarifBaseModel):
     message: Message
     locations: Optional[List[Location]] = None
     analysis_target: Optional[ArtifactLocation] = None
-    guid: Optional[UUID] = None
-    correlation_guid: Optional[UUID] = None
+    guid: Optional[str] = None
+    correlation_guid: Optional[str] = None
     fixes: Optional[List[Fix]] = None
     occurrences: Optional[List[Occurrence]] = None
     partial_fingerprints: Optional[Dict[str, str]] = None
@@ -449,8 +448,8 @@ class RunAutomationDetails(SarifBaseModel):
     """Information that describes a run's identity and role within an engineering system."""
 
     id: Optional[str] = None
-    guid: Optional[UUID] = None
-    correlation_guid: Optional[UUID] = None
+    guid: Optional[str] = None
+    correlation_guid: Optional[str] = None
     description: Optional[Message] = None
     properties: Optional[Dict[str, Any]] = None
 
@@ -459,7 +458,7 @@ class ToolComponent(SarifBaseModel):
     """Tool extension details."""
 
     name: str
-    guid: Optional[UUID] = None
+    guid: Optional[str] = None
     product: Optional[str] = None
     full_name: Optional[str] = None
     version: Optional[str] = None
@@ -507,7 +506,7 @@ class Run(SarifBaseModel):
     graphs: Optional[List[Graph]] = None
     results: Optional[List[Result]] = None
     automation_details: Optional[RunAutomationDetails] = None
-    baseline_guid: Optional[UUID] = None
+    baseline_guid: Optional[str] = None
     redaction_tokens: Optional[List[str]] = None
     default_encoding: Optional[str] = None
     default_source_language: Optional[str] = None
@@ -519,7 +518,7 @@ class Run(SarifBaseModel):
 class ExternalPropertyFileReference(SarifBaseModel):
     """Refers to an external property file that should be merged with this run."""
 
-    guid: Optional[UUID] = None
+    guid: Optional[str] = None
     item_count: Optional[int] = None
     location: ArtifactLocation
     properties: Optional[Dict[str, Any]] = None
