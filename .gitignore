@@ -3,3 +3,4 @@ __pycache__/*
 *.pyc
 *.pyo
 
+src/sarif_pydantic/_version.py

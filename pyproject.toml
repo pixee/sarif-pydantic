@@ -1,6 +1,6 @@
 [project]
 name = "sarif-pydantic"
-version = "0.5.2"
+dynamic = ["version"]
 description = ""
 authors = [
     {name = "Daniel D'Avella", email = "drdavella@gmail.com"},
@@ -12,8 +12,14 @@ dependencies = [
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/sarif_pydantic/_version.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/sarif_pydantic"]
