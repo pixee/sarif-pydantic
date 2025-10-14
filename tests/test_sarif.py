@@ -73,7 +73,7 @@ def test_run_from_dict():
     assert run.graphs == []
     assert run.results[0].message.text == "Result message"
     assert run.automation_details.id == "TEST-ID-123"
-    assert run.baseline_guid == UUID("12345678-1234-5678-1234-567812345678")
+    assert run.baseline_guid == "12345678-1234-5678-1234-567812345678"
     assert run.redaction_tokens == ["SECRET"]
     assert run.default_encoding == "utf-8"
     assert run.default_source_language == "python"
