@@ -19,10 +19,13 @@ class SarifBaseModel(BaseModel):
 
 
 class Message(SarifBaseModel):
-    text: str
+    # text is technically required by the SARIF spec, but some tools (e.g., CodeQL)
+    # generate SARIF with empty message objects in relatedLocations, so we make it optional
+    text: Optional[str] = None
     markdown: Optional[str] = None
     id: Optional[str] = None
     arguments: Optional[List[str]] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ArtifactLocation(SarifBaseModel):
