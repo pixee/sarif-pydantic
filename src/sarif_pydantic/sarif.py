@@ -33,6 +33,7 @@ class ArtifactLocation(SarifBaseModel):
     uri_base_id: Optional[str] = None
     index: Optional[int] = None
     description: Optional[Message] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ArtifactContent(SarifBaseModel):
@@ -41,7 +42,7 @@ class ArtifactContent(SarifBaseModel):
     text: Optional[str] = None
     binary: Optional[str] = None
     rendered: Optional[Message] = None
-    # Actually the spec allows properties here too, but omitting for simplicity
+    properties: Optional[Dict[str, Any]] = None
 
 
 class Region(SarifBaseModel):
@@ -55,6 +56,7 @@ class Region(SarifBaseModel):
     byte_length: Optional[int] = None
     snippet: Optional[ArtifactContent] = None
     message: Optional[Message] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class Artifact(SarifBaseModel):
@@ -70,6 +72,7 @@ class Artifact(SarifBaseModel):
     hashes: Optional[Dict[str, str]] = None
     last_modified: Optional[datetime] = None
     description: Optional[Message] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class Address(SarifBaseModel):
@@ -91,6 +94,7 @@ class PhysicalLocation(SarifBaseModel):
     region: Optional[Region] = None
     context_region: Optional[Region] = None
     address: Optional[Address] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class LogicalLocation(SarifBaseModel):
@@ -101,6 +105,7 @@ class LogicalLocation(SarifBaseModel):
     parent_index: Optional[int] = None
     index: Optional[int] = None
     fully_qualified_name: Optional[str] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class WebRequest(SarifBaseModel):
@@ -201,6 +206,7 @@ class Location(SarifBaseModel):
     message: Optional[Message] = None
     annotations: Optional[List[Region]] = None
     relationships: Optional[List[LocationRelationship]] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ReportingDescriptorReference(SarifBaseModel):
@@ -208,6 +214,7 @@ class ReportingDescriptorReference(SarifBaseModel):
     index: Optional[int] = None
     guid: Optional[str] = None
     tool_component: Optional[ToolComponentReference] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ReportingDescriptorRelationship(SarifBaseModel):
@@ -223,6 +230,7 @@ class ToolComponentReference(SarifBaseModel):
     name: Optional[str] = None
     index: Optional[int] = None
     guid: Optional[str] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ReportingConfiguration(SarifBaseModel):
@@ -230,6 +238,7 @@ class ReportingConfiguration(SarifBaseModel):
     level: Optional[str] = None
     rank: Optional[float] = None
     parameters: Optional[Dict[str, Any]] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ReportingDescriptor(SarifBaseModel):
@@ -241,6 +250,7 @@ class ReportingDescriptor(SarifBaseModel):
     help_uri: Optional[str] = None
     help: Optional[Message] = None
     relationships: Optional[List[ReportingDescriptorRelationship]] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ToolDriver(SarifBaseModel):
@@ -254,6 +264,7 @@ class ToolDriver(SarifBaseModel):
     taxa: Optional[List[ReportingDescriptor]] = None
     language: Optional[str] = None
     contents: Optional[List[str]] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class Tool(SarifBaseModel):
