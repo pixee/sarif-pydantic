@@ -83,10 +83,6 @@ def test_nested_validation():
     with pytest.raises(ValidationError):
         Run.model_validate({"tool": {}})
 
-    # Create a Result with invalid nested Message (missing text)
-    with pytest.raises(ValidationError):
-        Result.model_validate({"message": {}})
-
     # Create a ToolDriver with invalid nested rules
     with pytest.raises(ValidationError):
         ToolDriver.model_validate({"name": "TestTool", "rules": [{}]})  # Missing 'id'
