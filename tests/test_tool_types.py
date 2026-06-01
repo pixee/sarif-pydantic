@@ -31,7 +31,7 @@ def test_reporting_descriptor_reference_from_dict():
     ref = ReportingDescriptorReference.model_validate(full_dict)
     assert ref.id == "RULE001"
     assert ref.index == 0
-    assert ref.guid == UUID("12345678-1234-5678-1234-567812345678")
+    assert ref.guid == "12345678-1234-5678-1234-567812345678"
     assert ref.tool_component == ToolComponentReference(name="TestTool")
 
 
@@ -53,7 +53,7 @@ def test_tool_component_reference_from_dict():
     ref = ToolComponentReference.model_validate(full_dict)
     assert ref.name == "TestComponent"
     assert ref.index == 0
-    assert ref.guid == UUID("12345678-1234-5678-1234-567812345678")
+    assert ref.guid == "12345678-1234-5678-1234-567812345678"
 
 
 def test_reporting_configuration_from_dict():

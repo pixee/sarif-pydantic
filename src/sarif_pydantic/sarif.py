@@ -3,7 +3,6 @@ from __future__ import annotations
 from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, List, Optional
-from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
@@ -20,10 +19,13 @@ class SarifBaseModel(BaseModel):
 
 
 class Message(SarifBaseModel):
-    text: str
+    # text is technically required by the SARIF spec, but some tools (e.g., CodeQL)
+    # generate SARIF with empty message objects in relatedLocations, so we make it optional
+    text: Optional[str] = None
     markdown: Optional[str] = None
     id: Optional[str] = None
     arguments: Optional[List[str]] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ArtifactLocation(SarifBaseModel):
@@ -31,6 +33,7 @@ class ArtifactLocation(SarifBaseModel):
     uri_base_id: Optional[str] = None
     index: Optional[int] = None
     description: Optional[Message] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ArtifactContent(SarifBaseModel):
@@ -39,7 +42,7 @@ class ArtifactContent(SarifBaseModel):
     text: Optional[str] = None
     binary: Optional[str] = None
     rendered: Optional[Message] = None
-    # Actually the spec allows properties here too, but omitting for simplicity
+    properties: Optional[Dict[str, Any]] = None
 
 
 class Region(SarifBaseModel):
@@ -53,6 +56,7 @@ class Region(SarifBaseModel):
     byte_length: Optional[int] = None
     snippet: Optional[ArtifactContent] = None
     message: Optional[Message] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class Artifact(SarifBaseModel):
@@ -68,6 +72,7 @@ class Artifact(SarifBaseModel):
     hashes: Optional[Dict[str, str]] = None
     last_modified: Optional[datetime] = None
     description: Optional[Message] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class Address(SarifBaseModel):
@@ -89,6 +94,7 @@ class PhysicalLocation(SarifBaseModel):
     region: Optional[Region] = None
     context_region: Optional[Region] = None
     address: Optional[Address] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class LogicalLocation(SarifBaseModel):
@@ -99,6 +105,7 @@ class LogicalLocation(SarifBaseModel):
     parent_index: Optional[int] = None
     index: Optional[int] = None
     fully_qualified_name: Optional[str] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class WebRequest(SarifBaseModel):
@@ -183,15 +190,6 @@ class CodeFlow(SarifBaseModel):
     properties: Optional[Dict[str, Any]] = None
 
 
-class RegionAnnotation(SarifBaseModel):
-    """Describes the location of a region using a sequence of words."""
-
-    start_index: int
-    end_index: int
-    message: Optional[Message] = None
-    properties: Optional[Dict[str, Any]] = None
-
-
 class LocationRelationship(SarifBaseModel):
     """Represents a relationship between two locations."""
 
@@ -206,15 +204,17 @@ class Location(SarifBaseModel):
     physical_location: Optional[PhysicalLocation] = None
     logical_locations: Optional[List[LogicalLocation]] = None
     message: Optional[Message] = None
-    annotations: Optional[List[RegionAnnotation]] = None
+    annotations: Optional[List[Region]] = None
     relationships: Optional[List[LocationRelationship]] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ReportingDescriptorReference(SarifBaseModel):
     id: Optional[str] = None
     index: Optional[int] = None
-    guid: Optional[UUID] = None
+    guid: Optional[str] = None
     tool_component: Optional[ToolComponentReference] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ReportingDescriptorRelationship(SarifBaseModel):
@@ -229,7 +229,8 @@ class ReportingDescriptorRelationship(SarifBaseModel):
 class ToolComponentReference(SarifBaseModel):
     name: Optional[str] = None
     index: Optional[int] = None
-    guid: Optional[UUID] = None
+    guid: Optional[str] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ReportingConfiguration(SarifBaseModel):
@@ -237,6 +238,7 @@ class ReportingConfiguration(SarifBaseModel):
     level: Optional[str] = None
     rank: Optional[float] = None
     parameters: Optional[Dict[str, Any]] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ReportingDescriptor(SarifBaseModel):
@@ -248,6 +250,7 @@ class ReportingDescriptor(SarifBaseModel):
     help_uri: Optional[str] = None
     help: Optional[Message] = None
     relationships: Optional[List[ReportingDescriptorRelationship]] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class ToolDriver(SarifBaseModel):
@@ -261,6 +264,7 @@ class ToolDriver(SarifBaseModel):
     taxa: Optional[List[ReportingDescriptor]] = None
     language: Optional[str] = None
     contents: Optional[List[str]] = None
+    properties: Optional[Dict[str, Any]] = None
 
 
 class Tool(SarifBaseModel):
@@ -362,7 +366,7 @@ class Suppression(SarifBaseModel):
     kind: str
     status: Optional[str] = None
     location: Optional[Location] = None
-    guid: Optional[UUID] = None
+    guid: Optional[str] = None
     justification: Optional[str] = None
     properties: Optional[Dict[str, Any]] = None
 
@@ -386,8 +390,8 @@ class Result(SarifBaseModel):
     message: Message
     locations: Optional[List[Location]] = None
     analysis_target: Optional[ArtifactLocation] = None
-    guid: Optional[UUID] = None
-    correlation_guid: Optional[UUID] = None
+    guid: Optional[str] = None
+    correlation_guid: Optional[str] = None
     fixes: Optional[List[Fix]] = None
     occurrences: Optional[List[Occurrence]] = None
     partial_fingerprints: Optional[Dict[str, str]] = None
@@ -449,8 +453,8 @@ class RunAutomationDetails(SarifBaseModel):
     """Information that describes a run's identity and role within an engineering system."""
 
     id: Optional[str] = None
-    guid: Optional[UUID] = None
-    correlation_guid: Optional[UUID] = None
+    guid: Optional[str] = None
+    correlation_guid: Optional[str] = None
     description: Optional[Message] = None
     properties: Optional[Dict[str, Any]] = None
 
@@ -459,7 +463,7 @@ class ToolComponent(SarifBaseModel):
     """Tool extension details."""
 
     name: str
-    guid: Optional[UUID] = None
+    guid: Optional[str] = None
     product: Optional[str] = None
     full_name: Optional[str] = None
     version: Optional[str] = None
@@ -507,7 +511,7 @@ class Run(SarifBaseModel):
     graphs: Optional[List[Graph]] = None
     results: Optional[List[Result]] = None
     automation_details: Optional[RunAutomationDetails] = None
-    baseline_guid: Optional[UUID] = None
+    baseline_guid: Optional[str] = None
     redaction_tokens: Optional[List[str]] = None
     default_encoding: Optional[str] = None
     default_source_language: Optional[str] = None
@@ -519,7 +523,7 @@ class Run(SarifBaseModel):
 class ExternalPropertyFileReference(SarifBaseModel):
     """Refers to an external property file that should be merged with this run."""
 
-    guid: Optional[UUID] = None
+    guid: Optional[str] = None
     item_count: Optional[int] = None
     location: ArtifactLocation
     properties: Optional[Dict[str, Any]] = None

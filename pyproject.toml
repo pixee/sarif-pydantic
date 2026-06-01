@@ -1,27 +1,31 @@
 [project]
 name = "sarif-pydantic"
-version = "0.5.2"
+dynamic = ["version"]
 description = ""
 authors = [
-    {name = "Daniel D'Avella",email = "drdavella@gmail.com"},
+    {name = "Daniel D'Avella", email = "drdavella@gmail.com"},
 ]
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "pydantic>=2.8.0"
+    "pydantic>=2.8.0",
 ]
 
-[tool.poetry]
-packages = [{include = "sarif_pydantic", from = "src"}]
-
-
-[tool.poetry.group.test.dependencies]
-pytest = "^8.3.5"
-
-
-[tool.poetry.group.dev.dependencies]
-pre-commit = "^4.2.0"
-
 [build-system]
-requires = ["poetry-core>=2.0.0,<3.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/sarif_pydantic/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/sarif_pydantic"]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.3.0",
+    "pytest>=8.4.2",
+]

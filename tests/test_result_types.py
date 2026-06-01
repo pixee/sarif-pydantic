@@ -93,8 +93,8 @@ def test_result_from_dict():
     assert len(result.locations) == 1
     assert result.locations[0].id == 1
     assert result.analysis_target.uri == "file:///src/file.py"
-    assert result.guid == UUID("11111111-1111-1111-1111-111111111111")
-    assert result.correlation_guid == UUID("22222222-2222-2222-2222-222222222222")
+    assert result.guid == "11111111-1111-1111-1111-111111111111"
+    assert result.correlation_guid == "22222222-2222-2222-2222-222222222222"
     assert result.fixes == []
     assert result.occurrences == []
     assert result.stacks == []

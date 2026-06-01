@@ -22,21 +22,19 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: 2.0.1
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
 
     - name: Install dependencies
-      run: poetry install
+      run: uv sync --all-extras
 
     - name: Build and install package
       run: |
-        poetry build
-        pip install dist/*.whl
+        uv build
+        uv pip install dist/*.whl
 
     - name: Run tests
-      run: poetry run pytest
+      run: uv run pytest
 
   publish:
     needs: test
@@ -51,17 +49,13 @@ jobs:
       with:
         python-version: '3.13'
 
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: 2.0.1
+    - name: Install uv
+      uses: astral-sh/setup-uv@v5
 
     - name: Build package
-      run: poetry build
+      run: uv build
 
     - name: Publish to PyPI
       env:
-        PYPI_API_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
-      run: |
-        poetry config pypi-token.pypi $PYPI_API_TOKEN
-        poetry publish
+        UV_PUBLISH_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+      run: uv publish
